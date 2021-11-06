@@ -1,9 +1,25 @@
+const Product = require('../models/Product')
+const Errors = require('../errors')
+const { StatusCodes } = require('http-status-codes')
+
 const uploadProduct = async (req, res) => {
-    res.send('create product')
+    const { image, price, name } = req.body
+    if (!image || !price || !name) {
+        throw new Errors.BadRequestError('Missing fields')
+    }
+    const product = await Product.create({
+        image,
+        price,
+        name
+    })
+
+    res.status(StatusCodes.CREATED).send(product)
+
 }
 
 const getAllProducts = async (req, res) => {
-    res.send('all products')
+    const products = await Product.find()
+    res.status(StatusCodes.OK).send(products)
 }
 
 
